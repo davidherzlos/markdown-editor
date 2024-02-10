@@ -1,48 +1,79 @@
 <script>
     import { marked } from 'marked';
-    let value = `# Heading level 1\n## Heading level 2\n### Heading level 3\n\nThis is a paragraph, some words can be *italic* and some can be **bold**\n\nIf you want a list:\n- you\n- can\n- add it\n- here`;
+
+    let editorValue = `# Heading level 1\n## Heading level 2\n### Heading level 3\n\nThis is a paragraph, some words can be *italic* and some can be **bold**\n\nIf you want a list:\n- you\n- can\n- add it\n- here`;
+    let fileName = 'filename.txt';
+
+    function update() {
+        let tempLink = document.createElement('a');
+        let blob = new Blob([editorValue], { type: 'text/plain' });
+        tempLink.setAttribute('href', URL.createObjectURL(blob));
+        tempLink.setAttribute('download', fileName);
+        tempLink.click();
+        URL.revokeObjectURL(tempLink.href);
+    }
 </script>
 
-<div id="container">
-    <div>
+<svelte:document />
+
+<div class="panel">
+    <div id="save">
         <h3>
             Editor de Markdown
         </h3>
         <p>
             Escribe texto markdown y ve el resultado en tiempo real.
         </p>
+        <input type="text" bind:value={fileName}>
+        <button on:click={update}>
+            Guardar
+        </button>
     </div>
     <div id="editor">
-        Markdown
-        <textarea bind:value={value} cols="60" rows="20"></textarea>
+        <textarea bind:value={editorValue} cols="60" rows="20"></textarea>
     </div>
     <div id="preview">
-        Resultado
-        <div class="content">
-            {@html marked(value)}
-        </div>
+        <span>
+            {@html marked(editorValue)}
+        </span>
     </div>
 </div>
 
 <style>
-    #container {
+    .panel {
         font-size: 16px;
         font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";        width: 100%;
         display: flex;
         height: 100vh;
-        background: rgb(254, 243, 227);
+        background: rgb(255, 234, 234);
         gap: 1rem;
         padding: 1rem;
         box-sizing: border-box;
     }
+    #save input {
+        border: 1px solid rgb(214, 214, 214);
+        padding: 0.3rem;
+        color: rgb(22, 22, 22);
+        border-radius: 4px;
+        font-size: 1rem;
+    }
+    #save button {
+        background: rgb(197, 91, 213);
+        padding: 0.3rem 1rem;
+        border: none;
+        border-radius: 4px;
+        font-size: 1rem;
+        color: white;
+    }
+    #save button:hover {
+        cursor: pointer;
+    }
     #editor, #preview {
         display: block;
         width: 50%;
-    }
-    #editor {
         border-radius: 7px;
     }
-    textarea {
+    #editor textarea {
         width: 100%;
         height: 60%;
         resize: none;
@@ -54,9 +85,10 @@
         font-size: 1rem;
         line-height: 1.4rem;
     }
-    .content {
+    #preview span {
+        display: block;
         border-radius: 7px;
-        background: rgb(15, 29, 41);
+        background: rgb(47, 52, 67);
         height: 60%;
         padding: 1rem;
         box-sizing: border-box;
