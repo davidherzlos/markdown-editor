@@ -3,13 +3,16 @@
 
     let editorValue = `# Heading level 1\n## Heading level 2\n### Heading level 3\n\nThis is a paragraph, some words can be *italic* and some can be **bold**\n\nIf you want a list:\n- you\n- can\n- add it\n- here`;
     let fileName = 'filename.txt';
+    $: canSave = fileName !== '' && editorValue !== '';
 
     function update() {
         let tempLink = document.createElement('a');
         let blob = new Blob([editorValue], { type: 'text/plain' });
+
         tempLink.setAttribute('href', URL.createObjectURL(blob));
         tempLink.setAttribute('download', fileName);
         tempLink.click();
+
         URL.revokeObjectURL(tempLink.href);
     }
 </script>
@@ -25,9 +28,14 @@
             Escribe texto markdown y ve el resultado en tiempo real.
         </p>
         <input type="text" bind:value={fileName}>
-        <button on:click={update}>
+        <button on:click={update} disabled={!canSave}>
             Guardar
         </button>
+        {#if !canSave}
+            <p class="validation">
+                Algunos campos son requeridos.
+            </p>
+        {/if}
     </div>
     <div id="editor">
         <textarea bind:value={editorValue} cols="60" rows="20"></textarea>
@@ -67,6 +75,13 @@
     }
     #save button:hover {
         cursor: pointer;
+    }
+    #save button:disabled {
+        cursor: not-allowed;
+        background: grey;
+    }
+    #save .validation {
+        color: red;
     }
     #editor, #preview {
         display: block;
