@@ -52,12 +52,14 @@
         font-size: 16px;
         font-family: system-ui, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";        width: 100%;
         display: flex;
+        flex-direction: column;
         height: 100vh;
         background: rgb(255, 234, 234);
         gap: 1rem;
         padding: 1rem;
         box-sizing: border-box;
     }
+
     #save input {
         border: 1px solid rgb(214, 214, 214);
         padding: 0.3rem;
@@ -84,13 +86,11 @@
         color: red;
     }
     #editor, #preview {
-        display: block;
-        width: 50%;
+        width: 100%;
         border-radius: 7px;
     }
     #editor textarea {
         width: 100%;
-        height: 60%;
         resize: none;
         box-sizing: border-box;
         background: white;
@@ -104,11 +104,23 @@
         display: block;
         border-radius: 7px;
         background: rgb(47, 52, 67);
-        height: 60%;
         padding: 1rem;
         box-sizing: border-box;
         color: rgb(219, 219, 219);
         line-height: 2rem;
         overflow-y: scroll;
+    }
+    @media screen and (min-width: 768px) {
+        .panel {
+            flex-direction: row;
+        }
+        #editor, #preview {
+            display: block;
+            width: 50%;
+            border-radius: 7px;
+        }
+        #editor textarea {
+            height: 60%;
+        }
     }
 </style>
